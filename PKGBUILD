@@ -3,7 +3,7 @@
 # Contributor: Gaetan Bisson <bisson@archlinux.org>
 # Contributor: Scytrin dai Kinthra <scytrin@gmail.com>
 
-pkgname=st-git
+pkgname=st-patched
 pkgver=0.8.2.r25.g3848301
 pkgrel=1
 pkgdesc='Simple virtual terminal emulator for X'
@@ -27,7 +27,7 @@ sha1sums=('SKIP'
           '0648ea793dbb9e7e6ab8b3c841c25ab39a001eb0'
           'ee4d805c199d7b017cf36b8ccc51bd076aacc6ee')
 provides=("st")
-conflicts=("st")
+conflicts=("st" "st-git")
 
 
 pkgver() {
