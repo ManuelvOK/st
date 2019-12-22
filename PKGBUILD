@@ -4,7 +4,7 @@
 # Contributor: Scytrin dai Kinthra <scytrin@gmail.com>
 
 pkgname=st-git
-pkgver=0.8.2.r20.g8386642
+pkgver=0.8.2.r25.g3848301
 pkgrel=1
 pkgdesc='Simple virtual terminal emulator for X'
 url='https://st.suckless.org/'
@@ -12,16 +12,17 @@ arch=('i686' 'x86_64')
 license=('MIT')
 depends=('libxft')
 makedepends=('ncurses' 'libxext' 'git')
+_patches=('https://st.suckless.org/patches/scrollback/st-scrollback-20190331-21367a0.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20191024-a2c479c.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-altscreen-20191024-a2c479c.diff'
+          'st-font-and-colors.diff')
 source=('git://git.suckless.org/st'
-        'https://st.suckless.org/patches/scrollback/st-scrollback-0.8.diff'
-        'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-0.8.diff'
-        'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-altscreen-20190131-e23acb9.diff'
-        'st-font-and-colors.diff')
+        "${_patches[@]}")
 sha1sums=('SKIP'
-          '623f474b62fb08e0b470673bf8ea947747e1af8b'
-          '46e92d9d3f6fd1e4f08ed99bda16b232a1687407'
-          '0743f3736ff18be535e25c0916a89e5eed9d5f4f'
-          'f6cb146b6ae90fbf2f2e8df7104f4ae6a3e1baf6')
+          'fc5140eb0cc74636e5a0f5cd629e3cfbd10c9ed7'
+          'e457b4819f5233999e21d6df8438931160cd9181'
+          '0648ea793dbb9e7e6ab8b3c841c25ab39a001eb0'
+          'ee4d805c199d7b017cf36b8ccc51bd076aacc6ee')
 provides=("st")
 conflicts=("st")
 
@@ -32,10 +33,6 @@ pkgver() {
 }
 
 prepare() {
-    # "Fix" st-scrollback patch
-    # The diff assumes a line in config.def.h which is not present
-    sed -i st-scrollback-0.8.diff -e '8d'
-    sed -i st-scrollback-0.8.diff -e 's/@@ -178,6 +178,8 @@/@@ -178,5 +178,7 @@/'
 
     cd "${srcdir}/st"
 
@@ -45,7 +42,12 @@ prepare() {
     echo 'Copying config.h from $startdir if it exists...'
     [ -f "${startdir}/config.h" ] && cp "${startdir}/config.h" . || true
 
-	sed -e '/char worddelimiters/s/= .*/= " '"'"'`\\\"()[]{}<>|";/' -i config.def.h
+#    sed -e '/char worddelimiters/s/= .*/= " '"'"'`\\\"()[]{}<>|";/' -i config.def.h
+
+    for patch in "${_patches[@]}"; do
+        echo "Applying patch $(basename $patch)..."
+        patch -Np1 -i "$srcdir/$(basename $patch)"
+    done
 }
 
 build() {
