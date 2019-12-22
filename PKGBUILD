@@ -21,7 +21,7 @@ sha1sums=('SKIP'
           '623f474b62fb08e0b470673bf8ea947747e1af8b'
           '46e92d9d3f6fd1e4f08ed99bda16b232a1687407'
           '0743f3736ff18be535e25c0916a89e5eed9d5f4f'
-          'ee4d805c199d7b017cf36b8ccc51bd076aacc6ee')
+          'f6cb146b6ae90fbf2f2e8df7104f4ae6a3e1baf6')
 provides=("st")
 conflicts=("st")
 

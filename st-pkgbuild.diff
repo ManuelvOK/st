@@ -1,44 +1,13 @@
 diff --git a/PKGBUILD b/PKGBUILD
-index 7dc15bf..f1877fd 100755
+index f1877fd..8146895 100755
 --- a/PKGBUILD
 +++ b/PKGBUILD
-@@ -12,8 +12,16 @@ arch=('i686' 'x86_64')
- license=('MIT')
- depends=('libxft')
- makedepends=('ncurses' 'libxext' 'git')
--source=('git://git.suckless.org/st')
--sha1sums=('SKIP')
-+source=('git://git.suckless.org/st'
-+        'https://st.suckless.org/patches/scrollback/st-scrollback-0.8.diff'
-+        'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-0.8.diff'
-+        'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-altscreen-20190131-e23acb9.diff'
-+        'st-font-and-colors.diff')
-+sha1sums=('SKIP'
-+          '623f474b62fb08e0b470673bf8ea947747e1af8b'
-+          '46e92d9d3f6fd1e4f08ed99bda16b232a1687407'
-+          '0743f3736ff18be535e25c0916a89e5eed9d5f4f'
-+          'ee4d805c199d7b017cf36b8ccc51bd076aacc6ee')
+@@ -21,7 +21,7 @@ sha1sums=('SKIP'
+           '623f474b62fb08e0b470673bf8ea947747e1af8b'
+           '46e92d9d3f6fd1e4f08ed99bda16b232a1687407'
+           '0743f3736ff18be535e25c0916a89e5eed9d5f4f'
+-          'ee4d805c199d7b017cf36b8ccc51bd076aacc6ee')
++          'f6cb146b6ae90fbf2f2e8df7104f4ae6a3e1baf6')
  provides=("st")
  conflicts=("st")
  
-@@ -24,6 +32,11 @@ pkgver() {
- }
- 
- prepare() {
-+    # "Fix" st-scrollback patch
-+    # The diff assumes a line in config.def.h which is not present
-+    sed -i st-scrollback-0.8.diff -e '8d'
-+    sed -i st-scrollback-0.8.diff -e 's/@@ -178,6 +178,8 @@/@@ -178,5 +178,7 @@/'
-+
-     cd "${srcdir}/st"
- 
-     echo 'Copying config.def.h to $startdir...'
-@@ -31,6 +44,8 @@ prepare() {
- 
-     echo 'Copying config.h from $startdir if it exists...'
-     [ -f "${startdir}/config.h" ] && cp "${startdir}/config.h" . || true
-+
-+	sed -e '/char worddelimiters/s/= .*/= " '"'"'`\\\"()[]{}<>|";/' -i config.def.h
- }
- 
- build() {
